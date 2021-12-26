@@ -1,0 +1,9 @@
+{
+  "name": "aoc2021",
+  "version": "1.0.0",
+  "description": "AdventOfCode 2021 https://adventofcode.com/2021",
+  "type": "module",
+  "keywords": [],
+  "author": "Stefan Temme",
+  "license": "ISC"
+}
