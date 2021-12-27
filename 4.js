@@ -77,17 +77,22 @@ const board = (aBoard) => {
 }
 
 const allBoards = boards.map(board);
-let winner = null;
-let winningNumber = null;
+let winners = [];
 
-for (let i = 0; i < numbers.length && winner == null; i++) {
-    winningNumber = numbers[i];
-    allBoards.forEach(b => b.playNumber(winningNumber));
-    winner = allBoards.find(b => b.isWinner())
+for (let i = 0; i < numbers.length && allBoards.length > 0; i++) {
+    const n = numbers[i];
+    allBoards.forEach(b => b.playNumber(n));
+    const newWinners = allBoards.filter(b => b.isWinner());
+    newWinners.forEach(w => {
+        winners.push({winner: w, winningNumber: n})
+        allBoards.splice(allBoards.findIndex(x=>x==w),1);
+    });
 }
-if (winner) {
-    winner.print();
-    console.log(`Winner with Score: ${winner.getScore()*winningNumber}, winning number: ${winningNumber}`);
+if (winners.length > 0) {
+    const {winner, winningNumber} = winners[0];
+    console.log(`Winner with Score: ${winner.getScore() * winningNumber}, winning number: ${winningNumber}`);
+    const {winner:lastWinner, winningNumber:lastWinningNumber} = winners[winners.length-1];
+    console.log(`Last Winner with Score: ${lastWinner.getScore() * lastWinningNumber}, winning number: ${lastWinningNumber}`);
 } else {
     console.log("no Winner");
 }
