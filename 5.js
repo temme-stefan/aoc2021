@@ -15,35 +15,39 @@ const testdata = [
 ];
 const data = lines;
 
-function getIntersections(cellLines) {
-    const cellLineSets = cellLines.map(line => new Set(line.map(([x, y]) => `(${x}|${y})`)));
+function getIntersections(cellLineSets) {
 
     let intersections = new Set();
 
     for (let i = 0; i < cellLineSets.length; i++) {
         for (let j = i + 1; j < cellLineSets.length; j++) {
-            [...cellLineSets[i]].filter(cell => cellLineSets[j].has(cell)).forEach(c => intersections.add(c));
+            cellLineSets[i].forEach(cell=> {
+                if (cellLineSets[j].has(cell)){
+                    intersections.add(cell)
+                }
+            });
         }
     }
-    return intersections;
+    return intersections.size;
 }
-const cellLines = data.map(x=> toCells(x)).filter(x => x.length > 0);
+
+const cellLines = data.map(x => toCells(x)).filter(x => x != null);
 let intersections = getIntersections(cellLines);
-console.log(`There are ${[...intersections].length} intersections of horizontal and vertical lines`);
+console.log(`There are ${intersections} intersections of horizontal and vertical lines`);
 
-const cellLines2 = data.map(x=> toCells(x,true)).filter(x => x.length > 0);
+const cellLines2 = data.map(x => toCells(x, true))
 let intersections2 = getIntersections(cellLines2);
-console.log(`There are ${[...intersections2].length} intersections of horizontal, vertical and diagonal lines`);
+console.log(`There are ${intersections2} intersections of horizontal, vertical and diagonal lines`);
 
-function toCells(line,withDiagonals=false) {
-    const dirX = Math.sign(line.to.x-line.from.x);
-    const dirY = Math.sign(line.to.y-line.from.y);
-    const length = Math.max(Math.abs(line.to.x-line.from.x),Math.abs(line.to.y-line.from.y))+1;
+function toCells(line, withDiagonals = false) {
+    const dirX = Math.sign(line.to.x - line.from.x);
+    const dirY = Math.sign(line.to.y - line.from.y);
+    const length = Math.max(Math.abs(line.to.x - line.from.x), Math.abs(line.to.y - line.from.y)) + 1;
 
-    if (!withDiagonals && dirX != 0 && dirY != 0){
-        return [];
+    if (!withDiagonals && dirX != 0 && dirY != 0) {
+        return null;
     }
-    return Array.from({length},(_,i)=>[line.from.x+i*dirX,line.from.y+i*dirY]);
+    return new Set(Array.from({length}, (_, i) => `(${line.from.x + i * dirX}|${line.from.y + i * dirY})`));
 }
 
 
