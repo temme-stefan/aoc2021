@@ -54,7 +54,7 @@ const board = (aBoard) => {
             // diag1.push(marked[i][i]);
             // diag2.push(marked[size - 1 - i][i]);
         }
-        // isWinner = isWinner || test(diag1) || test(diag2);
+        // isWinner = isWinner || test1(diag1) || test1(diag2);
         return isWinner;
     }
     const getScore = () => {
