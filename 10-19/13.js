@@ -18,7 +18,7 @@ printMap(step);
 function foldMap({axis, index}, map) {
     let newMap;
     if (axis == "y") {
-        newMap = [...map.filter((r, i) => i < index).map(r=>[...r])];
+        newMap = map.filter((r, i) => i < index);
         const mirrored = map.filter((r, i) => i > index);
         mirrored.forEach((r, i) => r.forEach((p, j) => {
             if (p == point) {
