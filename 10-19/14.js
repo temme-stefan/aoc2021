@@ -1,12 +1,13 @@
 import {examplePolymerization, polymerization} from "./14-data.js";
+import {countingMap} from "../CountingMap/countingMap.js";
 
 const {start, rules} = parsePolymerizationInput(polymerization)
 const steps = 40;
-const letterCount = new Map();
-const nextPairs = new Map();
-start.split("").forEach(c => increaseCountingMap(c, letterCount));
+const letterCount = new countingMap();
+const nextPairs = new countingMap();
+start.split("").forEach(c => letterCount.increase(c));
 for (let i = 1; i < start.length; i++) {
-    increaseCountingMap(start.substr(i - 1, 2), nextPairs);
+    nextPairs.increase(start.substr(i - 1, 2));
 }
 for (let i = 0; i < steps; i++) {
     const proceed = [...nextPairs.entries()];
@@ -14,41 +15,17 @@ for (let i = 0; i < steps; i++) {
     proceed.forEach(([key, count]) => {
         if (rules.has(key)) {
             const {letter,pairs} = rules.get(key);
-            increaseCountingMap(letter,letterCount,count);
-            pairs.forEach(p=>increaseCountingMap(p,nextPairs,count));
+            letterCount.increase(letter,count);
+            pairs.forEach(p=>nextPairs.increase(p,count));
         }
     });
 }
 
 
-const {min, max} = minMaxFromMap(letterCount);
+const {min:[,min], max:[,max]} = letterCount.minmax();
 
 
 console.log(`Score:`, max - min);
-
-
-/**
- *
- * @param map{Map<*,number>}
- * @returns { {min:number,max:number} }
- */
-function minMaxFromMap(map) {
-    return [...map.values()].reduce(({min, max}, x) => {
-        min = Math.min(min, x);
-        max = Math.max(max, x);
-        return {min, max};
-    }, {min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER});
-}
-
-/**
- * @param key {*}
- * @param map {Map<*,number>}
- * @param amount {number}
- */
-function increaseCountingMap(key, map, amount = 1) {
-    map.set(key, (map.get(key) ?? 0) + amount);
-}
-
 
 /**
  * @param input {string}
