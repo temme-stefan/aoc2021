@@ -40,8 +40,8 @@ console.log("Shortest Path:", distances[distances.length - 1]);
 // }).reduce((a,b)=>a+b ,-data[0][0]))
 
 function getNextNode() { //~ O(|V|)
-    const next = cand.reduce((a, b) => (a!=null && distances[a] < distances[b])?a:b, null);
-    cand.splice(cand.indexOf(next),1);
+    const nextI = cand.reduce((a, b,i) => (a!=null && distances[cand[a]] < distances[b])?a:i, null);
+    const [next] = cand.splice(nextI,1);
     Q.delete(next);
     return next;
 }
